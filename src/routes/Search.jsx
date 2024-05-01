@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getUserCredentials } from './helpers/tokenManager';
 
+import styles from './styles/ImageList.module.css';
+
 export default function Search() {
   const [query, setQuery] = useState('');
   const [searchedQuery, setSearchedQuery] = useState('');
@@ -36,9 +38,7 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
-      setContent(() => data.content);
-      setSearchedQuery(() => query);
-      setQuery(() => '');
+      clearSearch();
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join(', '));
@@ -57,12 +57,15 @@ export default function Search() {
   );
 
   const results = content.map((item) => (
-    <ul>
-      <li>
-        <img src={item.thumbnail} style={{ width: '150px' }} />
-        <button>Add favourite!</button>
-      </li>
-    </ul>
+    <li key={item.id} style={{ padding: '10px' }}>
+      <div>
+        <img
+          src={item.thumbnail}
+          style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+        />
+      </div>
+      <button>Add favourite!</button>
+    </li>
   ));
 
   return (
@@ -82,7 +85,7 @@ export default function Search() {
             checked={contentType === 'image'}
             onChange={handleContentTypeChange}
           />
-          Image
+          Images
         </label>
         <label>
           <input
@@ -91,7 +94,7 @@ export default function Search() {
             checked={contentType === 'video'}
             onChange={handleContentTypeChange}
           />
-          Video
+          Videos
         </label>
 
         <button type='submit' style={{ marginLeft: '12px' }}>
@@ -99,8 +102,7 @@ export default function Search() {
         </button>
       </form>
       <p>{queryMessage}</p>
-
-      {results}
+      <ul className={styles.gridContainer}>{results}</ul>
     </>
   );
 }
