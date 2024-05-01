@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserCredentials } from './helpers/tokenManager';
 
-import styles from './styles/ImageList.module.css';
+import ImageList from './ImageList';
 
 export default function Search() {
   const [query, setQuery] = useState('');
@@ -38,7 +38,9 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
-      clearSearch();
+      setSearchedQuery(() => query);
+      setQuery(() => '');
+      setContent(() => data.content);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join(', '));
@@ -55,18 +57,6 @@ export default function Search() {
       </button>
     </p>
   );
-
-  const results = content.map((item) => (
-    <li key={item.id} style={{ padding: '10px' }}>
-      <div>
-        <img
-          src={item.thumbnail}
-          style={{ width: '150px', height: '150px', objectFit: 'cover' }}
-        />
-      </div>
-      <button>Add favourite!</button>
-    </li>
-  ));
 
   return (
     <>
@@ -102,7 +92,7 @@ export default function Search() {
         </button>
       </form>
       <p>{queryMessage}</p>
-      <ul className={styles.gridContainer}>{results}</ul>
+      <ImageList content={content} />
     </>
   );
 }
