@@ -76,6 +76,7 @@ export default function Search() {
       setSearchedQuery(() => queryParam);
       setQuery(() => '');
       setContent(() => data.content);
+      setSearchedContentType(() => contentType);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join(', '));
@@ -93,6 +94,10 @@ export default function Search() {
         Clear
       </button>
     </p>
+  );
+
+  const noSearchResults = searchedQuery.length > 0 && content.length === 0 && (
+    <p>No results</p>
   );
 
   return (
@@ -143,6 +148,7 @@ export default function Search() {
           />
         </>
       )}
+      {noSearchResults}
     </>
   );
 }
