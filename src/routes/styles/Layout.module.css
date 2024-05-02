@@ -9,3 +9,14 @@
   display: flex;
   gap: 18px;
 }
+
+a:link,
+a:visited {
+  color: blue;
+}
+
+.currentRoute {
+  color: black !important;
+  font-weight: bold;
+  text-decoration: none;
+}

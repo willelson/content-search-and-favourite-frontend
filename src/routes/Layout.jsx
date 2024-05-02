@@ -1,4 +1,4 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
   getUserCredentials,
@@ -10,6 +10,8 @@ import styles from './styles/Layout.module.css';
 export default function Content() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   useEffect(() => {
     const credentials = getUserCredentials();
@@ -27,8 +29,22 @@ export default function Content() {
     <>
       <div className={styles.header}>
         <div className={styles.navButtons}>
-          <Link to='/search'>Search</Link>
-          <Link to='/favourites'>Favourites</Link>
+          <Link
+            to='/search'
+            className={
+              location.pathname.includes('search') ? styles.currentRoute : ''
+            }
+          >
+            Search
+          </Link>
+          <Link
+            to='/favourites'
+            className={
+              location.pathname.includes('favourite') ? styles.currentRoute : ''
+            }
+          >
+            Favourites
+          </Link>
         </div>
         <div className={styles.userInfo}>
           Logged in as {email}
