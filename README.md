@@ -5,6 +5,13 @@ This simple React app is built to consume the
 
 ## Installation
 
+Set the base URL for the API in `constants.js`
+
+```
+export const API_BASE = 'http://<your api>/api/v1';
+
+```
+
 Set up with npm.
 
 ```

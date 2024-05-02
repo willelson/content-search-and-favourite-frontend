@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
+import { API_BASE } from '../helpers/constants';
 
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
@@ -80,9 +81,7 @@ export default function Search() {
     const { token } = getUserCredentials();
 
     // Add url parameters to search
-    const searchEndpoint = 'http://localhost:3000/api/v1/search';
-    const params = `?query=${queryParam}&contentType=${contentTypeParam}&page=${queryPage}`;
-    const url = searchEndpoint + params;
+    const url = `${API_BASE}/search?query=${queryParam}&contentType=${contentTypeParam}&page=${queryPage}`;
 
     const response = await fetch(url, {
       headers: {

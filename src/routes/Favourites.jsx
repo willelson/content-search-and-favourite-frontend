@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
+import { API_BASE } from '../helpers/constants';
 
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
@@ -17,7 +18,7 @@ export default function Favourites() {
 
   const getFavourites = async (queryPage = page) => {
     const { token } = getUserCredentials();
-    const url = `http://localhost:3000/api/v1/favourites?page=${queryPage}`;
+    const url = `${API_BASE}/favourites?page=${queryPage}`;
 
     const response = await fetch(url, {
       headers: {

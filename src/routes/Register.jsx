@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
-
+import { API_BASE } from '../helpers/constants';
 import styles from '../styles/AuthForms.module.css';
 
 export default function Register() {
@@ -12,7 +12,7 @@ export default function Register() {
   const registerUser = async (e) => {
     e.preventDefault();
 
-    const url = 'http://localhost:3000/api/v1/auth/register';
+    const url = `${API_BASE}/auth/register`;
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
