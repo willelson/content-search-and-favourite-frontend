@@ -20,7 +20,25 @@ export default function Search() {
     setContent(() => []);
   };
 
-  const search = async (e) => {
+  // toggles the favourite flag of te content
+  const toggleContentStatus = (pixabayId) => {
+    const index = content.findIndex((item) => item.pixabayId === pixabayId);
+
+    const updatedItem = {
+      ...content[index],
+      favourite: content[index]?.favourite ? false : true
+    };
+
+    const updatedContent = [
+      ...content.slice(0, index),
+      updatedItem,
+      ...content.slice(index + 1)
+    ];
+
+    setContent(() => updatedContent);
+  };
+
+  const getResults = async (e) => {
     e.preventDefault();
 
     // get token from storage
@@ -60,7 +78,7 @@ export default function Search() {
 
   return (
     <>
-      <form onSubmit={search}>
+      <form onSubmit={getResults}>
         <input
           type='query'
           placeholder='Search for content'
@@ -92,7 +110,7 @@ export default function Search() {
         </button>
       </form>
       <p>{queryMessage}</p>
-      <ImageList content={content} />
+      <ImageList content={content} toggleContentStatus={toggleContentStatus} />
     </>
   );
 }
