@@ -3,6 +3,7 @@
   width: 100%;
   padding-bottom: 12px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .navButtons {
@@ -15,8 +16,8 @@ a:visited {
   color: blue;
 }
 
-.currentRoute {
-  color: black !important;
+.navButtons .currentRoute {
+  color: black;
   font-weight: bold;
   text-decoration: none;
 }
