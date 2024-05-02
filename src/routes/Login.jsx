@@ -28,11 +28,11 @@ export default function Login() {
 
       // Navigate to search page
       navigate('/search');
-    } else if (response.status === 400) {
+    } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
     } else {
-      alert('Unable to register');
+      alert('Unable to login');
     }
   };
 
