@@ -110,26 +110,33 @@ export default function Search() {
           onChange={(e) => setQuery(e.target.value)}
         />
 
-        <label style={{ marginLeft: '4px' }}>
+        <label style={{ marginLeft: '8px' }}>
           <input
             type='radio'
             value='image'
             checked={contentType === 'image'}
             onChange={handleContentTypeChange}
+            style={{ marginRight: '4px' }}
           />
           Images
         </label>
-        <label>
+        <label style={{ marginLeft: '8px' }}>
           <input
             type='radio'
             value='video'
             checked={contentType === 'video'}
             onChange={handleContentTypeChange}
+            style={{ marginRight: '4px' }}
           />
           Videos
         </label>
 
-        <button type='submit' style={{ marginLeft: '12px' }}>
+        <button
+          type='submit'
+          style={{ marginLeft: '12px' }}
+          disabled={query.length === 0}
+          title={query.length === 0 && 'Enter search term'}
+        >
           Search
         </button>
       </form>
