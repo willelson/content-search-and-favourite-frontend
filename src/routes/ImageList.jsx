@@ -29,7 +29,7 @@ export default function ImageList({
       toggleContentStatus(pixabayId);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
-      alert(errors.errors.join(', '));
+      alert(errors.errors.join('\n'));
     } else {
       alert(
         'There was a problem adding this item to your favourites. Please try again later.'
@@ -56,7 +56,7 @@ export default function ImageList({
       toggleContentStatus(pixabayId);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
-      alert(errors.errors.join(', '));
+      alert(errors.errors.join('\n'));
     } else {
       alert(
         'There was a problem removing this item from your favourites. Please try again later.'

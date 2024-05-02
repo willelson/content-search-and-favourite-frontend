@@ -79,7 +79,7 @@ export default function Search() {
       setSearchedContentType(() => contentType);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
-      alert(errors.errors.join(', '));
+      alert(errors.errors.join('\n'));
     } else {
       alert('There was a problem fetching data. Please try again later.');
     }

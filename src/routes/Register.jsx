@@ -29,7 +29,7 @@ export default function Register() {
       navigate('/search');
     } else if (response.status === 400) {
       const errors = await response.json();
-      alert(errors.errors.join(', '));
+      alert(errors.errors.join('\n'));
     } else {
       alert('Unable to register');
     }

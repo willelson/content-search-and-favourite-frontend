@@ -56,7 +56,7 @@ export default function Favourites() {
   const message =
     content.length > 0
       ? 'Your favourite images and videos'
-      : 'Your do not have any favourite images or videos';
+      : 'You do not have any favourite images or videos';
 
   return (
     <>
