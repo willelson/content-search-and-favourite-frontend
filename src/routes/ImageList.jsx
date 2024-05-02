@@ -14,7 +14,6 @@ export default function ImageList({
   const addFavourite = async (item) => {
     const { pixabayId, contentType } = item;
 
-    // Get token from storage
     const { token } = getUserCredentials();
 
     const url = 'http://localhost:3000/api/v1/favourites';
@@ -44,7 +43,6 @@ export default function ImageList({
   const removeFavourite = async (item) => {
     const { pixabayId, contentType } = item;
 
-    // Get token from storage
     const { token } = getUserCredentials();
 
     const url = `http://localhost:3000/api/v1/favourites/${item.id}`;

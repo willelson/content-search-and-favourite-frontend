@@ -1,38 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+import styles from './styles/Search.module.css';
 import { getUserCredentials } from './helpers/tokenManager';
 
 import ImageList from './ImageList';
 import Pagination from './Pagination';
 
 export default function Search() {
-  const [query, setQuery] = useState('');
+  // Manages input from search form
+  //   - Build query params after search form submission
+  const [searchInput, setSearchInput] = useState('');
+  const [contentTypeInput, setContentTypeInput] = useState('image');
 
-  // manage pagination
+  // Manages pagination
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  // set after recieving content from backend
   const [content, setContent] = useState([]);
 
-  // manages content type radio buttons
-  const [contentType, setContentType] = useState('image');
-
-  // manages post-search message
-  const [searchedQuery, setSearchedQuery] = useState('');
-  const [searchedContentType, setSearchedContentType] = useState('');
+  // Manages query parametes:
+  //  - Display current query to user
+  //  - Build query params to fetch content after pagination change
+  const [query, setQuery] = useState('');
+  const [contentTypeQuery, setContentTypeQuery] = useState('');
 
   const handleContentTypeChange = (e) => {
-    setContentType(() => e.target.value);
+    setContentTypeInput(() => e.target.value);
   };
 
   const clearSearch = () => {
-    setSearchedQuery(() => '');
-    setSearchedContentType(() => '');
+    // Clear saved url parameter state
+    setQuery(() => '');
+    setContentTypeQuery(() => '');
+
+    // Clear loaded content
     setContent(() => []);
+
+    // Reset page back to 1
     setPage(() => 1);
   };
 
-  // toggles the favourite flag of te content
+  /**
+   * Finds item in the loaded content state by pixabayId and updates the favourite flag.
+   * Sets favourite true if the items doesn't already have the flag.
+   * Passed to ImageList component and used to handle display of the "Add favourite button"
+   */
   const toggleContentStatus = (pixabayId) => {
     const index = content.findIndex((item) => item.pixabayId === pixabayId);
 
@@ -50,19 +62,28 @@ export default function Search() {
     setContent(() => updatedContent);
   };
 
+  /**
+   * Prevent page refresh and pass form values to getResults
+   */
   const submitSearch = (e) => {
     e.preventDefault();
-    getResults(query);
+    const firstPage = 1;
+    getResults(searchInput, contentTypeInput, firstPage);
   };
 
-  const getResults = async (queryParam = query, queryPage = page) => {
-    // get token from storage
+  /**
+   * queryParam, contentTypeParam, queryPage are the values to be used to build the query
+   * When submitting the form these come from form state - searchInput, contentTypeInput
+   * When calling from pagination changes they come from the current query state - query contentTypeQuery
+   */
+  const getResults = async (queryParam, contentTypeParam, queryPage) => {
     const { token } = getUserCredentials();
 
-    // add url parameters
-    const url = `http://localhost:3000/api/v1/search?query=${queryParam}&contentType=${contentType}&page=${queryPage}`;
+    // Add url parameters to search
+    const searchEndpoint = 'http://localhost:3000/api/v1/search';
+    const params = `?query=${queryParam}&contentType=${contentTypeParam}&page=${queryPage}`;
+    const url = searchEndpoint + params;
 
-    // make req to server
     const response = await fetch(url, {
       headers: {
         Authorization: token
@@ -71,12 +92,17 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
+      // Add server response to local state
       setPage(() => data.page);
       setTotalResults(() => data.totalHits);
-      setSearchedQuery(() => queryParam);
-      setQuery(() => '');
       setContent(() => data.content);
-      setSearchedContentType(() => contentType);
+
+      // Store details about current search to display to user and use for pagination changes
+      setQuery(() => queryParam);
+      setContentTypeQuery(() => contentTypeParam);
+
+      // Clear search input
+      setSearchInput(() => '');
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
@@ -85,18 +111,22 @@ export default function Search() {
     }
   };
 
-  const changePagination = (page) => getResults(searchedQuery, page);
+  /**
+   * Pagination change handler. Passes query state from previous requests to getResults
+   */
+  const changePagination = (page) => getResults(query, contentTypeQuery, page);
 
   const queryMessage = (
     <p>
-      {`Showing ${searchedContentType} results for "${searchedQuery}"`}
+      {`Showing ${contentTypeQuery} results for "${query}"`}
       <button onClick={clearSearch} style={{ marginLeft: '12px' }}>
         Clear
       </button>
     </p>
   );
 
-  const noSearchResults = searchedQuery.length > 0 && content.length === 0 && (
+  // Show no results message if query set but content is empty
+  const noSearchResults = query.length > 0 && content.length === 0 && (
     <p>No results</p>
   );
 
@@ -104,38 +134,38 @@ export default function Search() {
     <>
       <form onSubmit={submitSearch}>
         <input
-          type='query'
+          type='text'
           placeholder='Search for content'
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
 
-        <label style={{ marginLeft: '8px' }}>
+        <label className={styles.label}>
           <input
             type='radio'
             value='image'
-            checked={contentType === 'image'}
-            onChange={handleContentTypeChange}
-            style={{ marginRight: '4px' }}
+            checked={contentTypeInput === 'image'}
+            onChange={(e) => setContentTypeInput(e.target.value)}
+            className={styles.radioButton}
           />
           Images
         </label>
-        <label style={{ marginLeft: '8px' }}>
+        <label className={styles.label}>
           <input
             type='radio'
             value='video'
-            checked={contentType === 'video'}
-            onChange={handleContentTypeChange}
-            style={{ marginRight: '4px' }}
+            checked={contentTypeInput === 'video'}
+            onChange={(e) => setContentTypeInput(e.target.value)}
+            className={styles.radioButton}
           />
           Videos
         </label>
 
         <button
           type='submit'
-          style={{ marginLeft: '12px' }}
-          disabled={query.length === 0}
-          title={query.length === 0 && 'Enter search term'}
+          className={styles.searchButton}
+          disabled={searchInput.length === 0}
+          title={searchInput.length === 0 && 'Enter search term'}
         >
           Search
         </button>

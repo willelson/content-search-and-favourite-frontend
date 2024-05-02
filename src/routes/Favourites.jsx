@@ -16,7 +16,6 @@ export default function Favourites() {
   }, []);
 
   const getFavourites = async (queryPage = page) => {
-    // Get token from storage
     const { token } = getUserCredentials();
     const url = `http://localhost:3000/api/v1/favourites?page=${queryPage}`;
 
