@@ -5,7 +5,7 @@ export default function Pagination({ page = 1, totalResults = 0, changePage }) {
 
   // TODO chack max page limit
   const nextDisabled = page * resultsPerPage >= totalResults;
-  const prevDisabled = page === 1;
+  const prevDisabled = page == 1;
 
   const nextPage = () => {
     const nextPage = Number(page) + 1;
