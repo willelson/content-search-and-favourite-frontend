@@ -73,6 +73,12 @@ export default function ImageList({
   };
 
   const thumnails = content.map((item) => {
+    let showButton = true;
+    if (!showRemove && item?.favourite === true) {
+      showButton = false;
+    }
+    const showFavouritedMsg = !showRemove && item?.favourite === true;
+
     const buttonText = item?.favourite ? 'Remove favourite' : 'Add favourite';
     return (
       <li key={item.id} style={{ padding: '10px' }}>
@@ -82,7 +88,10 @@ export default function ImageList({
             style={{ width: '150px', height: '150px', objectFit: 'cover' }}
           />
         </div>
-        <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
+        {showButton && (
+          <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
+        )}
+        {showFavouritedMsg && <p style={{ margin: '0px' }}>Favourited!</p>}
       </li>
     );
   });
@@ -95,9 +104,3 @@ ImageList.propTypes = {
   toggleContentStatus: PropTypes.func,
   isStudent: PropTypes.bool
 };
-
-// ImageList.defaultProps = {
-//   content: [],
-//   toggleContentStatus: () => {},
-//   showRemove: true
-// };

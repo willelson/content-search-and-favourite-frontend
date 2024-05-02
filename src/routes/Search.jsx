@@ -110,7 +110,11 @@ export default function Search() {
         </button>
       </form>
       <p>{queryMessage}</p>
-      <ImageList content={content} toggleContentStatus={toggleContentStatus} />
+      <ImageList
+        content={content}
+        toggleContentStatus={toggleContentStatus}
+        showRemove={false}
+      />
     </>
   );
 }
