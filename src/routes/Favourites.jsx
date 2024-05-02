@@ -2,18 +2,23 @@ import { useState, useEffect } from 'react';
 import { getUserCredentials } from './helpers/tokenManager';
 
 import ImageList from './ImageList';
+import Pagination from './Pagination';
 
 export default function Favourites() {
   const [content, setContent] = useState([]);
+
+  // manage pagination
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
     getFavourites();
   }, []);
 
-  const getFavourites = async () => {
+  const getFavourites = async (queryPage = page) => {
     // get token from storage
     const { token } = getUserCredentials();
-    const url = 'http://localhost:3000/api/v1/favourites';
+    const url = `http://localhost:3000/api/v1/favourites?page=${queryPage}`;
 
     // make req to server
     const response = await fetch(url, {
@@ -31,6 +36,8 @@ export default function Favourites() {
       }));
 
       setContent(() => content);
+      setPage(() => data.page);
+      setTotalResults(() => data.total);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join(', '));
@@ -44,6 +51,8 @@ export default function Favourites() {
     getFavourites();
   };
 
+  const changePagination = (page) => getFavourites(page);
+
   const message =
     content.length > 0
       ? 'Your favourite images and videos'
@@ -52,7 +61,20 @@ export default function Favourites() {
   return (
     <>
       <div>{message}</div>
-      <ImageList content={content} toggleContentStatus={toggleContentStatus} />
+
+      {content.length > 0 && (
+        <>
+          <ImageList
+            content={content}
+            toggleContentStatus={toggleContentStatus}
+          />
+          <Pagination
+            page={page}
+            totalResults={totalResults}
+            changePage={changePagination}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -2,12 +2,23 @@ import { useState, useEffect } from 'react';
 import { getUserCredentials } from './helpers/tokenManager';
 
 import ImageList from './ImageList';
+import Pagination from './Pagination';
 
 export default function Search() {
   const [query, setQuery] = useState('');
-  const [searchedQuery, setSearchedQuery] = useState('');
+
+  // manage pagination
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+
+  // set after recieving content from backend
   const [content, setContent] = useState([]);
+
+  // manages content type radio buttons
   const [contentType, setContentType] = useState('image');
+
+  // manages post-search message
+  const [searchedQuery, setSearchedQuery] = useState('');
   const [searchedContentType, setSearchedContentType] = useState('');
 
   const handleContentTypeChange = (e) => {
@@ -18,6 +29,7 @@ export default function Search() {
     setSearchedQuery(() => '');
     setSearchedContentType(() => '');
     setContent(() => []);
+    setPage(() => 1);
   };
 
   // toggles the favourite flag of te content
@@ -38,14 +50,17 @@ export default function Search() {
     setContent(() => updatedContent);
   };
 
-  const getResults = async (e) => {
+  const submitSearch = (e) => {
     e.preventDefault();
+    getResults(query);
+  };
 
+  const getResults = async (queryParam = query, queryPage = page) => {
     // get token from storage
     const { token } = getUserCredentials();
 
     // add url parameters
-    const url = `http://localhost:3000/api/v1/search?query=${query}&contentType=${contentType}`;
+    const url = `http://localhost:3000/api/v1/search?query=${queryParam}&contentType=${contentType}&page=${queryPage}`;
 
     // make req to server
     const response = await fetch(url, {
@@ -56,7 +71,9 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
-      setSearchedQuery(() => query);
+      setPage(() => data.page);
+      setTotalResults(() => data.totalHits);
+      setSearchedQuery(() => queryParam);
       setQuery(() => '');
       setContent(() => data.content);
     } else if ([400, 401].includes(response.status)) {
@@ -67,7 +84,9 @@ export default function Search() {
     }
   };
 
-  const queryMessage = content.length > 0 && (
+  const changePagination = (page) => getResults(searchedQuery, page);
+
+  const queryMessage = (
     <p>
       {`Showing ${searchedContentType} results for "${searchedQuery}"`}
       <button onClick={clearSearch} style={{ marginLeft: '12px' }}>
@@ -78,7 +97,7 @@ export default function Search() {
 
   return (
     <>
-      <form onSubmit={getResults}>
+      <form onSubmit={submitSearch}>
         <input
           type='query'
           placeholder='Search for content'
@@ -109,12 +128,21 @@ export default function Search() {
           Search
         </button>
       </form>
-      <p>{queryMessage}</p>
-      <ImageList
-        content={content}
-        toggleContentStatus={toggleContentStatus}
-        showRemove={false}
-      />
+      {content.length > 0 && (
+        <>
+          <p>{queryMessage}</p>
+          <ImageList
+            content={content}
+            toggleContentStatus={toggleContentStatus}
+            showRemove={false}
+          />
+          <Pagination
+            page={page}
+            totalResults={totalResults}
+            changePage={changePagination}
+          />
+        </>
+      )}
     </>
   );
 }
