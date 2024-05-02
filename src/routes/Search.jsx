@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import styles from './styles/Search.module.css';
-import { getUserCredentials } from './helpers/tokenManager';
+import styles from '../styles/Search.module.css';
+import { getUserCredentials } from '../helpers/tokenManager';
 
-import ImageList from './ImageList';
-import Pagination from './Pagination';
+import ImageList from '../utils/ImageList';
+import Pagination from '../utils/Pagination';
 
 export default function Search() {
   // Manages input from search form
@@ -165,14 +165,14 @@ export default function Search() {
           type='submit'
           className={styles.searchButton}
           disabled={searchInput.length === 0}
-          title={searchInput.length === 0 && 'Enter search term'}
+          title={searchInput.length === 0 ? 'Enter search term' : ''}
         >
           Search
         </button>
       </form>
       {content.length > 0 && (
         <>
-          <p>{queryMessage}</p>
+          <span>{queryMessage}</span>
           <ImageList
             content={content}
             toggleContentStatus={toggleContentStatus}

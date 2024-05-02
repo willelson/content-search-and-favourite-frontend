@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getUserCredentials } from './helpers/tokenManager';
+import { getUserCredentials } from '../helpers/tokenManager';
 
-import ImageList from './ImageList';
-import Pagination from './Pagination';
+import ImageList from '../utils/ImageList';
+import Pagination from '../utils/Pagination';
 
 export default function Favourites() {
   const [content, setContent] = useState([]);

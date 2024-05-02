@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 
-import imageIcon from './icons/imageIcon.png';
-import videoIcon from './icons/videoIcon.png';
+import imageIcon from '../icons/imageIcon.png';
+import videoIcon from '../icons/videoIcon.png';
 
-import styles from './styles/ImageList.module.css';
-import { getUserCredentials } from './helpers/tokenManager';
+import styles from '../styles/ImageList.module.css';
+import { getUserCredentials } from '../helpers/tokenManager';
 
 export default function ImageList({
   content,
@@ -83,7 +83,7 @@ export default function ImageList({
 
     /**
      * If this is the search area we show "favourited" after an item is marked as favourited
-     * REmoving favourites from the search area is not yet supported.
+     * Removing favourites from the search area is not yet supported.
      */
     const showFavouritedMsg = !showRemove && item?.favourite === true;
     const buttonText = item?.favourite ? 'Remove favourite' : 'Add favourite';
@@ -92,8 +92,11 @@ export default function ImageList({
     const tooltipText =
       item?.contentType === 'image' ? 'image content' : 'video content';
 
+    // create unique identifier for each image
+    const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
+
     return (
-      <li key={item.id}>
+      <li key={uniqueIdentifier}>
         <div>
           <img
             src={item.thumbnail}

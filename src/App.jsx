@@ -6,14 +6,15 @@ import {
   Outlet
 } from 'react-router-dom';
 
-import Layout from './Layout';
-import Login from './Login';
-import Register from './Register';
-import Search from './Search';
-import Favourites from './Favourites';
+import Layout from './routes/Layout';
+import Login from './routes/Login';
+import Register from './routes/Register';
+import Search from './routes/Search';
+import Favourites from './routes/Favourites';
 
 import { getUserCredentials } from './helpers/tokenManager';
 
+// Navigates to login page if no user credentials are stores
 const UserAuthenticated = () => {
   const user = getUserCredentials();
   return user ? <Outlet /> : <Navigate to='/login' replace />;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { storeUserCredentials } from './helpers/tokenManager';
-import styles from './styles/AuthForms.module.css';
+import { storeUserCredentials } from '../helpers/tokenManager';
+import styles from '../styles/AuthForms.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');

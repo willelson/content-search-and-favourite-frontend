@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { storeUserCredentials } from './helpers/tokenManager';
+import { storeUserCredentials } from '../helpers/tokenManager';
 
-import styles from './styles/AuthForms.module.css';
+import styles from '../styles/AuthForms.module.css';
 
 export default function Register() {
   const [email, setEmail] = useState('');
