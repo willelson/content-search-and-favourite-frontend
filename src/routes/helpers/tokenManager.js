@@ -12,3 +12,5 @@ export const getUserCredentials = (email, token) => {
 export const storeUserCredentials = (email, token) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, token }));
 };
+
+export const removeUserCredentials = () => localStorage.removeItem(STORAGE_KEY);
