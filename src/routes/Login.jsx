@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from './helpers/tokenManager';
+import styles from './styles/AuthForms.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -37,30 +38,34 @@ export default function Login() {
 
   return (
     <>
-      <form onSubmit={loginUser}>
+      <div className={styles.authForm}>
+        <form onSubmit={loginUser}>
+          <div>
+            <input
+              type='text'
+              placeholder='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              type='password'
+              placeholder='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className={styles.submitContainer}>
+            <button type='submit'>Login</button>
+          </div>
+        </form>
         <div>
-          <input
-            type='text'
-            placeholder='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <p>
+            New here? <Link to='/register'>Register</Link>.
+          </p>
         </div>
-        <div>
-          <input
-            type='password'
-            placeholder='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <button type='submit'>Login</button>
-        </div>
-      </form>
-      <p>
-        New here? <Link to='/register'>Register</Link>.
-      </p>
+      </div>
     </>
   );
 }
