@@ -7,7 +7,7 @@ import Pagination from './Pagination';
 export default function Favourites() {
   const [content, setContent] = useState([]);
 
-  // manage pagination
+  // Manage pagination
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
@@ -16,25 +16,27 @@ export default function Favourites() {
   }, []);
 
   const getFavourites = async (queryPage = page) => {
-    // get token from storage
+    // Get token from storage
     const { token } = getUserCredentials();
     const url = `http://localhost:3000/api/v1/favourites?page=${queryPage}`;
 
-    // make req to server
     const response = await fetch(url, {
       headers: {
         Authorization: token
       }
     });
 
+    // Handle server response
     if (response.status === 200) {
       const data = await response.json();
 
+      // Add favourite flag as this feature is not yet supported by the api
       const content = data.content.map((item) => ({
         ...item,
         favourite: true
       }));
 
+      // Add response to component state
       setContent(() => content);
       setPage(() => data.page);
       setTotalResults(() => data.total);
@@ -51,6 +53,7 @@ export default function Favourites() {
     getFavourites();
   };
 
+  // Get new page results when pagination changes
   const changePagination = (page) => getFavourites(page);
 
   const message =

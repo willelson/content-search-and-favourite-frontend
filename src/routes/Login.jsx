@@ -39,31 +39,34 @@ export default function Login() {
   return (
     <>
       <div className={styles.authForm}>
-        <form onSubmit={loginUser}>
-          <div>
-            <input
-              type='text'
-              placeholder='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              type='password'
-              placeholder='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className={styles.submitContainer}>
-            <button type='submit'>Login</button>
-          </div>
-        </form>
         <div>
-          <p>
-            New here? <Link to='/register'>Register</Link>.
-          </p>
+          <h2 className={styles.authHeader}>Login</h2>
+          <form onSubmit={loginUser}>
+            <div>
+              <input
+                type='text'
+                placeholder='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                type='password'
+                placeholder='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className={styles.submitContainer}>
+              <button type='submit'>Login</button>
+            </div>
+          </form>
+          <div>
+            <p>
+              New here? <Link to='/register'>Register</Link>.
+            </p>
+          </div>
         </div>
       </div>
     </>

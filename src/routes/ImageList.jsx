@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 
+import imageIcon from './icons/imageIcon.png';
+import videoIcon from './icons/videoIcon.png';
+
 import styles from './styles/ImageList.module.css';
 import { getUserCredentials } from './helpers/tokenManager';
 
@@ -11,7 +14,7 @@ export default function ImageList({
   const addFavourite = async (item) => {
     const { pixabayId, contentType } = item;
 
-    // get token from storage
+    // Get token from storage
     const { token } = getUserCredentials();
 
     const url = 'http://localhost:3000/api/v1/favourites';
@@ -24,6 +27,7 @@ export default function ImageList({
       body: JSON.stringify({ pixabayId, contentType })
     });
 
+    // Handle responses
     if (response.status === 201) {
       const data = await response.json();
       toggleContentStatus(pixabayId);
@@ -40,7 +44,7 @@ export default function ImageList({
   const removeFavourite = async (item) => {
     const { pixabayId, contentType } = item;
 
-    // get token from storage
+    // Get token from storage
     const { token } = getUserCredentials();
 
     const url = `http://localhost:3000/api/v1/favourites/${item.id}`;
@@ -52,6 +56,7 @@ export default function ImageList({
       body: JSON.stringify({ pixabayId, contentType })
     });
 
+    // Handle response
     if (response.status === 202) {
       toggleContentStatus(pixabayId);
     } else if ([400, 401].includes(response.status)) {
@@ -77,21 +82,42 @@ export default function ImageList({
     if (!showRemove && item?.favourite === true) {
       showButton = false;
     }
-    const showFavouritedMsg = !showRemove && item?.favourite === true;
 
+    /**
+     * If this is the search area we show "favourited" after an item is marked as favourited
+     * REmoving favourites from the search area is not yet supported.
+     */
+    const showFavouritedMsg = !showRemove && item?.favourite === true;
     const buttonText = item?.favourite ? 'Remove favourite' : 'Add favourite';
+
+    const imageSrc = item?.contentType === 'image' ? imageIcon : videoIcon;
+    const tooltipText =
+      item?.contentType === 'image' ? 'image content' : 'video content';
+
     return (
-      <li key={item.id} style={{ padding: '10px' }}>
+      <li key={item.id}>
         <div>
           <img
             src={item.thumbnail}
-            style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+            style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+            alt='image content'
           />
         </div>
-        {showButton && (
-          <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
-        )}
-        {showFavouritedMsg && <p style={{ margin: '0px' }}>Favourited!</p>}
+        <div className={styles.controls}>
+          {showButton && (
+            <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
+          )}
+
+          {showFavouritedMsg && (
+            <p className={styles.favouritedMessage}>Favourited!</p>
+          )}
+          <img
+            className={styles.contentIcon}
+            src={imageSrc}
+            alt={tooltipText}
+            title={tooltipText}
+          />
+        </div>
       </li>
     );
   });

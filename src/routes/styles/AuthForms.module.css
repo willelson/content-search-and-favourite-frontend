@@ -17,3 +17,7 @@ input {
   justify-content: end;
   margin-bottom: 24px;
 }
+
+.authHeader {
+  margin-bottom: 8px;
+}
