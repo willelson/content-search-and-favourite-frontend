@@ -111,9 +111,9 @@ export default function Search() {
   };
 
   /**
-   * Pagination change handler. Passes query state from previous requests to getResults
+   * Pagination page change handler. Passes query state from previous requests to getResults
    */
-  const changePagination = (page) => getResults(query, contentTypeQuery, page);
+  const changePage = (newPage) => getResults(query, contentTypeQuery, newPage);
 
   const queryMessage = (
     <p>
@@ -180,7 +180,7 @@ export default function Search() {
           <Pagination
             page={page}
             totalResults={totalResults}
-            changePage={changePagination}
+            changePage={changePage}
           />
         </>
       )}

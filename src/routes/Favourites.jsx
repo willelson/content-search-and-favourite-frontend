@@ -52,7 +52,7 @@ export default function Favourites() {
   const toggleContentStatus = () => getFavourites(page);
 
   // Get new page results when pagination changes
-  const changePagination = (newPage) => getFavourites(newPage);
+  const changePage = (newPage) => getFavourites(newPage);
 
   const message =
     content.length > 0
@@ -72,7 +72,7 @@ export default function Favourites() {
           <Pagination
             page={page}
             totalResults={totalResults}
-            changePage={changePagination}
+            changePage={changePage}
           />
         </>
       )}
