@@ -9,15 +9,8 @@ export default function Pagination({ page = 1, totalResults = 0, changePage }) {
   const nextDisabled = page * resultsPerPage >= totalResults;
   const prevDisabled = page == 1;
 
-  const nextPage = () => {
-    const nextPage = Number(page) + 1;
-    changePage(nextPage);
-  };
-
-  const prevPage = () => {
-    const prevPage = Number(page) - 1;
-    changePage(prevPage);
-  };
+  const nextPage = () => changePage(page + 1);
+  const prevPage = () => changePage(page - 1);
 
   return (
     <>

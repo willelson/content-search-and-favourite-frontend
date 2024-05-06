@@ -13,10 +13,10 @@ export default function Favourites() {
   const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
-    getFavourites();
+    getFavourites(page);
   }, []);
 
-  const getFavourites = async (queryPage = page) => {
+  const getFavourites = async (queryPage) => {
     const { token } = getUserCredentials();
     const url = `${API_BASE}/favourites?page=${queryPage}`;
 
@@ -48,13 +48,11 @@ export default function Favourites() {
     }
   };
 
-  const toggleContentStatus = () => {
-    // refetch favourites whenever a toggle changes
-    getFavourites();
-  };
+  // Re-fetch favourites whenever a toggle changes
+  const toggleContentStatus = () => getFavourites(page);
 
   // Get new page results when pagination changes
-  const changePagination = (page) => getFavourites(page);
+  const changePagination = (newPage) => getFavourites(newPage);
 
   const message =
     content.length > 0
