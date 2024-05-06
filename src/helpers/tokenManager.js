@@ -1,7 +1,7 @@
 const STORAGE_KEY = 'pixabayUser';
 
-export const getUserCredentials = (email, token) => {
-  const user = localStorage.getItem(STORAGE_KEY, { email, token });
+export const getUserCredentials = () => {
+  const user = localStorage.getItem(STORAGE_KEY);
   if (user) {
     return JSON.parse(user);
   } else {
