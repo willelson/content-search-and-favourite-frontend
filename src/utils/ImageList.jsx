@@ -129,5 +129,5 @@ export default function ImageList({
 ImageList.propTypes = {
   content: PropTypes.array,
   toggleContentStatus: PropTypes.func,
-  isStudent: PropTypes.bool
+  showRemove: PropTypes.bool
 };
