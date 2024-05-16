@@ -19,7 +19,7 @@ export default function Search() {
 
   const [content, setContent] = useState([]);
 
-  // Manages query parametes:
+  // Manages query parameters:
   //  - Display current query to user
   //  - Build query params to fetch content after pagination change
   const [query, setQuery] = useState('');
@@ -42,25 +42,10 @@ export default function Search() {
   };
 
   /**
-   * Finds item in the loaded content state by pixabayId and updates the favourite flag.
-   * Sets favourite true if the items doesn't already have the flag.
-   * Passed to ImageList component and used to handle display of the "Add favourite button"
+   * Refresh search results after user adds an item to favourites
    */
-  const toggleContentStatus = (pixabayId) => {
-    const index = content.findIndex((item) => item.pixabayId === pixabayId);
-
-    const updatedItem = {
-      ...content[index],
-      favourite: content[index]?.favourite ? false : true
-    };
-
-    const updatedContent = [
-      ...content.slice(0, index),
-      updatedItem,
-      ...content.slice(index + 1)
-    ];
-
-    setContent(() => updatedContent);
+  const toggleContentStatus = () => {
+    getResults(query, contentTypeQuery, page);
   };
 
   /**
@@ -175,7 +160,6 @@ export default function Search() {
           <ImageList
             content={content}
             toggleContentStatus={toggleContentStatus}
-            showRemove={false}
           />
           <Pagination
             page={page}
