@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
@@ -7,23 +7,24 @@ import { API_BASE } from '../helpers/constants';
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
+import { SearchContext } from '../searchContext';
+
 export default function Search() {
   // Manages input from search form
   //   - Build query params after search form submission
   const [searchInput, setSearchInput] = useState('');
   const [contentTypeInput, setContentTypeInput] = useState('image');
 
-  // Manages pagination
-  const [page, setPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  // Pagination
+  const { page, setPage } = useContext(SearchContext);
+  const { totalResults, setTotalResults } = useContext(SearchContext);
 
-  const [content, setContent] = useState([]);
+  // Content from search results
+  const { content, setContent } = useContext(SearchContext);
 
-  // Manages query parameters:
-  //  - Display current query to user
-  //  - Build query params to fetch content after pagination change
-  const [query, setQuery] = useState('');
-  const [contentTypeQuery, setContentTypeQuery] = useState('');
+  // Query parameters
+  const { query, setQuery } = useContext(SearchContext);
+  const { contentTypeQuery, setContentTypeQuery } = useContext(SearchContext);
 
   const handleContentTypeChange = (e) => {
     setContentTypeInput(() => e.target.value);
