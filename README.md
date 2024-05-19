@@ -8,7 +8,7 @@ This simple React app is built to consume the
 Set the base URL for the API in `constants.js`
 
 ```
-export const API_BASE = 'http://<your api>/api/v1';
+export const API_BASE = 'http://<your api>/api/v2';
 
 ```
 

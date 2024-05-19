@@ -5,9 +5,11 @@ import {
   removeUserCredentials
 } from '../helpers/tokenManager';
 
+import { SearchContextProvider } from '../searchContext';
+
 import styles from '../styles/Layout.module.css';
 
-export default function Content() {
+export default function Layout() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
@@ -48,13 +50,14 @@ export default function Content() {
         </div>
         <div className={styles.userInfo}>
           Logged in as {email}
-          <button onClick={logout} style={{ marginLeft: '12px' }}>
+          <button onClick={logout} className={styles.logoutButton}>
             Logout
           </button>
         </div>
       </div>
-
-      <Outlet />
+      <SearchContextProvider>
+        <Outlet />
+      </SearchContextProvider>
     </>
   );
 }

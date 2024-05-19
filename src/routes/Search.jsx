@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
@@ -7,23 +7,24 @@ import { API_BASE } from '../helpers/constants';
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
+import { SearchContext } from '../searchContext';
+
 export default function Search() {
   // Manages input from search form
   //   - Build query params after search form submission
   const [searchInput, setSearchInput] = useState('');
   const [contentTypeInput, setContentTypeInput] = useState('image');
 
-  // Manages pagination
-  const [page, setPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  // Pagination
+  const { page, setPage } = useContext(SearchContext);
+  const { totalResults, setTotalResults } = useContext(SearchContext);
 
-  const [content, setContent] = useState([]);
+  // Content from search results
+  const { content, setContent } = useContext(SearchContext);
 
-  // Manages query parametes:
-  //  - Display current query to user
-  //  - Build query params to fetch content after pagination change
-  const [query, setQuery] = useState('');
-  const [contentTypeQuery, setContentTypeQuery] = useState('');
+  // Query parameters
+  const { query, setQuery } = useContext(SearchContext);
+  const { contentTypeQuery, setContentTypeQuery } = useContext(SearchContext);
 
   const handleContentTypeChange = (e) => {
     setContentTypeInput(() => e.target.value);
@@ -42,25 +43,10 @@ export default function Search() {
   };
 
   /**
-   * Finds item in the loaded content state by pixabayId and updates the favourite flag.
-   * Sets favourite true if the items doesn't already have the flag.
-   * Passed to ImageList component and used to handle display of the "Add favourite button"
+   * Refresh search results after user adds an item to favourites
    */
-  const toggleContentStatus = (pixabayId) => {
-    const index = content.findIndex((item) => item.pixabayId === pixabayId);
-
-    const updatedItem = {
-      ...content[index],
-      favourite: content[index]?.favourite ? false : true
-    };
-
-    const updatedContent = [
-      ...content.slice(0, index),
-      updatedItem,
-      ...content.slice(index + 1)
-    ];
-
-    setContent(() => updatedContent);
+  const toggleContentStatus = () => {
+    getResults(query, contentTypeQuery, page);
   };
 
   /**
@@ -175,7 +161,6 @@ export default function Search() {
           <ImageList
             content={content}
             toggleContentStatus={toggleContentStatus}
-            showRemove={false}
           />
           <Pagination
             page={page}

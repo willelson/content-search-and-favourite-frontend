@@ -14,7 +14,7 @@ import Favourites from './routes/Favourites';
 
 import { getUserCredentials } from './helpers/tokenManager';
 
-// Navigates to login page if no user credentials are stores
+// Navigates to login page if no user credentials are stored
 const UserAuthenticated = () => {
   const user = getUserCredentials();
   return user ? <Outlet /> : <Navigate to='/login' replace />;
