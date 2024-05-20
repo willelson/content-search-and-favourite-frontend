@@ -70,7 +70,7 @@ export default function Register() {
           <p>
             Already registered? <Link to='/login'>Login</Link>.
           </p>
-        </div>{' '}
+        </div>
       </div>
     </>
   );

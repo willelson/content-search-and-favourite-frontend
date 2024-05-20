@@ -10,35 +10,19 @@ import Pagination from '../utils/Pagination';
 import { SearchContext } from '../searchContext';
 
 export default function Search() {
-  // Manages input from search form
-  //   - Build query params after search form submission
+  // Search form state - used to build query params after submission
   const [searchInput, setSearchInput] = useState('');
   const [contentTypeInput, setContentTypeInput] = useState('image');
 
-  console.log(SearchContext);
-
-  // Pagination
-  const { page, setPage } = useContext(SearchContext);
-  const { totalResults, setTotalResults } = useContext(SearchContext);
-
-  // Content from search results
-  const { content, setContent } = useContext(SearchContext);
-
-  // Query parameters
-  const { query, setQuery } = useContext(SearchContext);
-  const { contentTypeQuery, setContentTypeQuery } = useContext(SearchContext);
-
-  const clearSearch = () => {
-    // Clear saved url parameter state
-    setQuery(() => '');
-    setContentTypeQuery(() => '');
-
-    // Clear loaded content
-    setContent(() => []);
-
-    // Reset page back to 1
-    setPage(() => 1);
-  };
+  const {
+    updateSearchContext,
+    clearSearch,
+    page,
+    totalResults,
+    content,
+    query,
+    contentTypeQuery
+  } = useContext(SearchContext);
 
   /**
    * Refresh search results after user adds an item to favourites
@@ -57,9 +41,9 @@ export default function Search() {
   };
 
   /**
-   * queryParam, contentTypeParam, queryPage are the values to be used to build the query
-   * When submitting the form these come from form state - searchInput, contentTypeInput
-   * When calling from pagination changes they come from the current query state - query contentTypeQuery
+   * queryParam, contentTypeParam, queryPage are the values used to build the query:
+   *  - when submitting the form these come from form state - searchInput, contentTypeInput
+   *  - when calling from page change handler they come from search context state state
    */
   const getResults = async (
     queryParam: string,
@@ -79,14 +63,7 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
-      // Add server response to local state
-      setPage(() => data.page);
-      setTotalResults(() => data.totalHits);
-      setContent(() => data.content);
-
-      // Store details about current search to display to user and use for pagination changes
-      setQuery(() => queryParam);
-      setContentTypeQuery(() => contentTypeParam);
+      updateSearchContext(data, queryParam, contentTypeParam);
 
       // Clear search input
       setSearchInput(() => '');
