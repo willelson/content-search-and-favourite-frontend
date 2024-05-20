@@ -1,5 +1,5 @@
 import { createContext, useState, ReactNode } from 'react';
-import { PixabayItem } from './types/pixabayTypes';
+import { PixabayItem } from '../types/pixabayTypes';
 
 type SearchContextType = {
   updateSearchContext: (

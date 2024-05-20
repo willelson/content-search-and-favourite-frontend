@@ -7,7 +7,7 @@ import { API_BASE } from '../helpers/constants';
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
-import { SearchContext } from '../searchContext';
+import { SearchContext } from '../context/searchContext';
 
 export default function Search() {
   // Search form state - used to build query params after submission

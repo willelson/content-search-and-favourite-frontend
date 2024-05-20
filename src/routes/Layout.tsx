@@ -4,7 +4,7 @@ import {
   getUserCredentials,
   removeUserCredentials
 } from '../helpers/tokenManager';
-import { SearchContextProvider } from '../searchContext';
+import { SearchContextProvider } from '../context/searchContext';
 
 import styles from '../styles/Layout.module.css';
 
