@@ -1,9 +1,8 @@
 export type PixabayItem = {
-  id: number;
+  userFavouriteId: number | null;
   pixabayId: number;
   contentType: string;
   thumbnail: string;
   contentURL: string;
   pixabayURL: string;
-  userFavouriteId: number | null;
 };

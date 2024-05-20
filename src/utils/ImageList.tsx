@@ -49,7 +49,7 @@ export default function ImageList({
 
     const { token } = getUserCredentials();
 
-    const url = `${API_BASE}/favourites/${item.id}`;
+    const url = `${API_BASE}/favourites/${item.userFavouriteId}`;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
