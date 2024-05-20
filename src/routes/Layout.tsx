@@ -4,12 +4,11 @@ import {
   getUserCredentials,
   removeUserCredentials
 } from '../helpers/tokenManager';
-
 import { SearchContextProvider } from '../searchContext';
 
 import styles from '../styles/Layout.module.css';
 
-export default function Layout() {
+export default function Content() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
@@ -17,7 +16,7 @@ export default function Layout() {
 
   useEffect(() => {
     const credentials = getUserCredentials();
-    if (credentials) {
+    if (credentials.email.length > 0) {
       setEmail(() => credentials.email);
     }
   }, []);
@@ -50,11 +49,12 @@ export default function Layout() {
         </div>
         <div className={styles.userInfo}>
           Logged in as {email}
-          <button onClick={logout} className={styles.logoutButton}>
+          <button onClick={logout} style={{ marginLeft: '12px' }}>
             Logout
           </button>
         </div>
       </div>
+
       <SearchContextProvider>
         <Outlet />
       </SearchContextProvider>

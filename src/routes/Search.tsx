@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 
 import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
@@ -15,6 +15,8 @@ export default function Search() {
   const [searchInput, setSearchInput] = useState('');
   const [contentTypeInput, setContentTypeInput] = useState('image');
 
+  console.log(SearchContext);
+
   // Pagination
   const { page, setPage } = useContext(SearchContext);
   const { totalResults, setTotalResults } = useContext(SearchContext);
@@ -25,10 +27,6 @@ export default function Search() {
   // Query parameters
   const { query, setQuery } = useContext(SearchContext);
   const { contentTypeQuery, setContentTypeQuery } = useContext(SearchContext);
-
-  const handleContentTypeChange = (e) => {
-    setContentTypeInput(() => e.target.value);
-  };
 
   const clearSearch = () => {
     // Clear saved url parameter state
@@ -52,7 +50,7 @@ export default function Search() {
   /**
    * Prevent page refresh and pass form values to getResults
    */
-  const submitSearch = (e) => {
+  const submitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const firstPage = 1;
     getResults(searchInput, contentTypeInput, firstPage);
@@ -63,7 +61,11 @@ export default function Search() {
    * When submitting the form these come from form state - searchInput, contentTypeInput
    * When calling from pagination changes they come from the current query state - query contentTypeQuery
    */
-  const getResults = async (queryParam, contentTypeParam, queryPage) => {
+  const getResults = async (
+    queryParam: string,
+    contentTypeParam: string,
+    queryPage: number
+  ) => {
     const { token } = getUserCredentials();
 
     // Add url parameters to search
@@ -99,7 +101,8 @@ export default function Search() {
   /**
    * Pagination page change handler. Passes query state from previous requests to getResults
    */
-  const changePage = (newPage) => getResults(query, contentTypeQuery, newPage);
+  const changePage = (newPage: number) =>
+    getResults(query, contentTypeQuery, newPage);
 
   const queryMessage = (
     <p>

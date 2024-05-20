@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
@@ -5,18 +7,20 @@ import { API_BASE } from '../helpers/constants';
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
+import { PixabayItem } from '../types/pixabayTypes';
+
 export default function Favourites() {
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState<Array<PixabayItem>>([]);
 
   // Manage pagination
-  const [page, setPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  const [page, setPage] = useState<number>(1);
+  const [totalResults, setTotalResults] = useState<number>(0);
 
   useEffect(() => {
     getFavourites(page);
   }, []);
 
-  const getFavourites = async (queryPage) => {
+  const getFavourites = async (queryPage: number): Promise<void> => {
     const { token } = getUserCredentials();
     const url = `${API_BASE}/favourites?page=${queryPage}`;
 
@@ -31,7 +35,7 @@ export default function Favourites() {
       const data = await response.json();
 
       // Add favourite flag as this feature is not yet supported by the api
-      const content = data.content.map((item) => ({
+      const content = data.content.map((item: PixabayItem) => ({
         ...item,
         favourite: true
       }));
@@ -52,7 +56,7 @@ export default function Favourites() {
   const toggleContentStatus = () => getFavourites(page);
 
   // Get new page results when pagination changes
-  const changePage = (newPage) => getFavourites(newPage);
+  const changePage = (newPage: number) => getFavourites(newPage);
 
   const message =
     content.length > 0

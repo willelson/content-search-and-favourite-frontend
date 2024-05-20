@@ -1,17 +1,17 @@
+import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
+
 import styles from '../styles/AuthForms.module.css';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-
+  const login = async (): Promise<void> => {
     const url = `${API_BASE}/auth/login`;
     const response = await fetch(url, {
       method: 'POST',
@@ -24,7 +24,7 @@ export default function Login() {
 
     if (response.status === 200) {
       // Store user credentials
-      const token = response.headers.get('Authorization');
+      const token: string = response.headers.get('Authorization') || '';
       storeUserCredentials(email, token);
 
       // Navigate to search page
@@ -37,12 +37,17 @@ export default function Login() {
     }
   };
 
+  const submitLoginForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    login();
+  };
+
   return (
     <>
       <div className={styles.authForm}>
         <div>
           <h2 className={styles.authHeader}>Login</h2>
-          <form onSubmit={loginUser}>
+          <form onSubmit={submitLoginForm}>
             <div>
               <input
                 type='text'

@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import imageIcon from '../icons/imageIcon.png';
 import videoIcon from '../icons/videoIcon.png';
 
@@ -7,9 +5,20 @@ import styles from '../styles/ImageList.module.css';
 import { API_BASE } from '../helpers/constants';
 import { getUserCredentials } from '../helpers/tokenManager';
 
-export default function ImageList({ content, toggleContentStatus }) {
-  const addFavourite = async (item) => {
+import { PixabayItem } from '../types/pixabayTypes';
+
+type ImageListProps = {
+  content: Array<PixabayItem>;
+  toggleContentStatus: () => void;
+};
+
+export default function ImageList({
+  content,
+  toggleContentStatus
+}: ImageListProps) {
+  const addFavourite = async (item: PixabayItem) => {
     const { pixabayId, contentType } = item;
+
     const { token } = getUserCredentials();
 
     const url = `${API_BASE}/favourites`;
@@ -22,9 +31,9 @@ export default function ImageList({ content, toggleContentStatus }) {
       body: JSON.stringify({ pixabayId, contentType })
     });
 
+    // Handle responses
     if (response.status === 201) {
-      const data = await response.json();
-      toggleContentStatus(pixabayId);
+      toggleContentStatus();
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
@@ -35,11 +44,12 @@ export default function ImageList({ content, toggleContentStatus }) {
     }
   };
 
-  const removeFavourite = async (item) => {
+  const removeFavourite = async (item: PixabayItem) => {
     const { pixabayId, contentType } = item;
+
     const { token } = getUserCredentials();
 
-    const url = `${API_BASE}/favourites/${item.userFavouriteId}`;
+    const url = `${API_BASE}/favourites/${item.id}`;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -48,8 +58,8 @@ export default function ImageList({ content, toggleContentStatus }) {
       body: JSON.stringify({ pixabayId, contentType })
     });
 
+    // Handle response
     if (response.status === 202) {
-      // Toggle favourited status if sucessfully removed
       toggleContentStatus();
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
@@ -61,16 +71,15 @@ export default function ImageList({ content, toggleContentStatus }) {
     }
   };
 
-  const toggleFavourite = (item) => {
-    const isFavourite = item.userFavouriteId !== null;
-    if (isFavourite) {
+  const toggleFavourite = (item: PixabayItem) => {
+    if (item.userFavouriteId !== null) {
       removeFavourite(item);
     } else {
       addFavourite(item);
     }
   };
 
-  const thumnails = content.map((item) => {
+  const thumnails = content.map((item: PixabayItem) => {
     // Check if this item already favourited by the user
     const isFavourite = item.userFavouriteId !== null;
     const buttonText = isFavourite ? 'Remove favourite' : 'Add favourite';
@@ -106,8 +115,3 @@ export default function ImageList({ content, toggleContentStatus }) {
 
   return <ul className={styles.gridContainer}>{thumnails}</ul>;
 }
-
-ImageList.propTypes = {
-  content: PropTypes.array,
-  toggleContentStatus: PropTypes.func
-};
