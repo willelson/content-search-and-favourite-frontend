@@ -8,7 +8,7 @@ import { SearchContextProvider } from '../context/searchContext';
 
 import styles from '../styles/Layout.module.css';
 
-export default function Content() {
+export default function Layout() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
