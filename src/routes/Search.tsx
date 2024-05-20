@@ -43,7 +43,7 @@ export default function Search() {
   /**
    * queryParam, contentTypeParam, queryPage are the values used to build the query:
    *  - when submitting the form these come from form state - searchInput, contentTypeInput
-   *  - when calling from page change handler they come from search context state state
+   *  - when calling from page change handler they come from search context state
    */
   const getResults = async (
     queryParam: string,

@@ -49,7 +49,7 @@ export default function Layout() {
         </div>
         <div className={styles.userInfo}>
           Logged in as {email}
-          <button onClick={logout} style={{ marginLeft: '12px' }}>
+          <button onClick={logout} className={styles.logoutButton}>
             Logout
           </button>
         </div>

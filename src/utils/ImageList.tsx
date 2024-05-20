@@ -8,7 +8,7 @@ import { getUserCredentials } from '../helpers/tokenManager';
 import { PixabayItem } from '../types/pixabayTypes';
 
 type ImageListProps = {
-  content: Array<PixabayItem>;
+  content: PixabayItem[];
   toggleContentStatus: () => void;
 };
 

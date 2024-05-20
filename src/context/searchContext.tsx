@@ -1,7 +1,7 @@
 import { createContext, useState, ReactNode } from 'react';
 import { PixabayItem } from '../types/pixabayTypes';
 
-type SearchContextType = {
+type SearchContext = {
   updateSearchContext: (
     data: PixabayData,
     query: string,
@@ -25,7 +25,7 @@ type PixabayData = {
   content: PixabayItem[];
 };
 
-export const SearchContext = createContext({} as SearchContextType);
+export const SearchContext = createContext({} as SearchContext);
 
 export const SearchContextProvider = ({ children }: SearchContextProvider) => {
   // Manages pagination

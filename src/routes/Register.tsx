@@ -13,7 +13,6 @@ export default function Register() {
     const url = `${API_BASE}/auth/register`;
     const response = await fetch(url, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       },

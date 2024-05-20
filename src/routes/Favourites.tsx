@@ -8,7 +8,7 @@ import Pagination from '../utils/Pagination';
 import { PixabayItem } from '../types/pixabayTypes';
 
 export default function Favourites() {
-  const [content, setContent] = useState<Array<PixabayItem>>([]);
+  const [content, setContent] = useState<PixabayItem[]>([]);
 
   // Manage pagination
   const [page, setPage] = useState<number>(1);
