@@ -31,6 +31,7 @@ export default function App() {
           <Route element={<UserAuthenticated />}>
             <Route index path='search' element={<Search />} />
           </Route>
+
           <Route element={<UserAuthenticated />}>
             <Route path='favourites' element={<Favourites />} />
           </Route>

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 
 import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
@@ -7,40 +7,22 @@ import { API_BASE } from '../helpers/constants';
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
-import { SearchContext } from '../searchContext';
+import { SearchContext } from '../context/searchContext';
 
 export default function Search() {
-  // Manages input from search form
-  //   - Build query params after search form submission
+  // Search form state - used to build query params after submission
   const [searchInput, setSearchInput] = useState('');
   const [contentTypeInput, setContentTypeInput] = useState('image');
 
-  // Pagination
-  const { page, setPage } = useContext(SearchContext);
-  const { totalResults, setTotalResults } = useContext(SearchContext);
-
-  // Content from search results
-  const { content, setContent } = useContext(SearchContext);
-
-  // Query parameters
-  const { query, setQuery } = useContext(SearchContext);
-  const { contentTypeQuery, setContentTypeQuery } = useContext(SearchContext);
-
-  const handleContentTypeChange = (e) => {
-    setContentTypeInput(() => e.target.value);
-  };
-
-  const clearSearch = () => {
-    // Clear saved url parameter state
-    setQuery(() => '');
-    setContentTypeQuery(() => '');
-
-    // Clear loaded content
-    setContent(() => []);
-
-    // Reset page back to 1
-    setPage(() => 1);
-  };
+  const {
+    updateSearchContext,
+    clearSearch,
+    page,
+    totalResults,
+    content,
+    query,
+    contentTypeQuery
+  } = useContext(SearchContext);
 
   /**
    * Refresh search results after user adds an item to favourites
@@ -52,18 +34,22 @@ export default function Search() {
   /**
    * Prevent page refresh and pass form values to getResults
    */
-  const submitSearch = (e) => {
+  const submitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const firstPage = 1;
     getResults(searchInput, contentTypeInput, firstPage);
   };
 
   /**
-   * queryParam, contentTypeParam, queryPage are the values to be used to build the query
-   * When submitting the form these come from form state - searchInput, contentTypeInput
-   * When calling from pagination changes they come from the current query state - query contentTypeQuery
+   * queryParam, contentTypeParam, queryPage are the values used to build the query:
+   *  - when submitting the form these come from form state - searchInput, contentTypeInput
+   *  - when calling from page change handler they come from search context state
    */
-  const getResults = async (queryParam, contentTypeParam, queryPage) => {
+  const getResults = async (
+    queryParam: string,
+    contentTypeParam: string,
+    queryPage: number
+  ) => {
     const { token } = getUserCredentials();
 
     // Add url parameters to search
@@ -77,14 +63,7 @@ export default function Search() {
 
     if (response.status === 200) {
       const data = await response.json();
-      // Add server response to local state
-      setPage(() => data.page);
-      setTotalResults(() => data.totalHits);
-      setContent(() => data.content);
-
-      // Store details about current search to display to user and use for pagination changes
-      setQuery(() => queryParam);
-      setContentTypeQuery(() => contentTypeParam);
+      updateSearchContext(data, queryParam, contentTypeParam);
 
       // Clear search input
       setSearchInput(() => '');
@@ -99,7 +78,8 @@ export default function Search() {
   /**
    * Pagination page change handler. Passes query state from previous requests to getResults
    */
-  const changePage = (newPage) => getResults(query, contentTypeQuery, newPage);
+  const changePage = (newPage: number) =>
+    getResults(query, contentTypeQuery, newPage);
 
   const queryMessage = (
     <p>

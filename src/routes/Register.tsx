@@ -1,48 +1,50 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
 import styles from '../styles/AuthForms.module.css';
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function Register() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-
-    const url = `${API_BASE}/auth/login`;
+  const register = async () => {
+    const url = `${API_BASE}/auth/register`;
     const response = await fetch(url, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email, password })
     });
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       // Store user credentials
-      const token = response.headers.get('Authorization');
+      const token = response.headers.get('Authorization') || '';
       storeUserCredentials(email, token);
 
       // Navigate to search page
       navigate('/search');
-    } else if ([400, 401].includes(response.status)) {
+    } else if (response.status === 400) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
     } else {
-      alert('Unable to login');
+      alert('Unable to register');
     }
+  };
+
+  const submitRegisterForm = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    register();
   };
 
   return (
     <>
       <div className={styles.authForm}>
         <div>
-          <h2 className={styles.authHeader}>Login</h2>
-          <form onSubmit={loginUser}>
+          <h2 style={{ marginBottom: '8px' }}>Register</h2>
+          <form onSubmit={submitRegisterForm}>
             <div>
               <input
                 type='text'
@@ -60,14 +62,12 @@ export default function Login() {
               />
             </div>
             <div className={styles.submitContainer}>
-              <button type='submit'>Login</button>
+              <button type='submit'>Register</button>
             </div>
           </form>
-          <div>
-            <p>
-              New here? <Link to='/register'>Register</Link>.
-            </p>
-          </div>
+          <p>
+            Already registered? <Link to='/login'>Login</Link>.
+          </p>
         </div>
       </div>
     </>

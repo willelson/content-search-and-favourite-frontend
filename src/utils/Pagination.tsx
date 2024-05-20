@@ -1,8 +1,16 @@
-import PropTypes from 'prop-types';
-
 import styles from '../styles/Pagination.module.css';
 
-export default function Pagination({ page = 1, totalResults = 0, changePage }) {
+type PaginationProps = {
+  page: number;
+  totalResults: number;
+  changePage: (page: number) => void;
+};
+
+export default function Pagination({
+  page = 1,
+  totalResults = 0,
+  changePage
+}: PaginationProps) {
   const resultsPerPage = 20;
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
@@ -28,9 +36,3 @@ export default function Pagination({ page = 1, totalResults = 0, changePage }) {
     </>
   );
 }
-
-Pagination.propTypes = {
-  page: PropTypes.number,
-  totalResults: PropTypes.number,
-  changePage: PropTypes.func
-};

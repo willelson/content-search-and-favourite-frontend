@@ -1,48 +1,51 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
+
 import styles from '../styles/AuthForms.module.css';
 
-export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function Login() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
-  const registerUser = async (e) => {
-    e.preventDefault();
-
-    const url = `${API_BASE}/auth/register`;
+  const login = async (): Promise<void> => {
+    const url = `${API_BASE}/auth/login`;
     const response = await fetch(url, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email, password })
     });
 
-    if (response.status === 201) {
+    if (response.status === 200) {
       // Store user credentials
-      const token = response.headers.get('Authorization');
+      const token: string = response.headers.get('Authorization') || '';
       storeUserCredentials(email, token);
 
       // Navigate to search page
       navigate('/search');
-    } else if (response.status === 400) {
+    } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
     } else {
-      alert('Unable to register');
+      alert('Unable to login');
     }
+  };
+
+  const submitLoginForm = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    login();
   };
 
   return (
     <>
       <div className={styles.authForm}>
         <div>
-          <h2 style={{ marginBottom: '8px' }}>Register</h2>
-          <form onSubmit={registerUser}>
+          <h2 className={styles.authHeader}>Login</h2>
+          <form onSubmit={submitLoginForm}>
             <div>
               <input
                 type='text'
@@ -60,13 +63,15 @@ export default function Register() {
               />
             </div>
             <div className={styles.submitContainer}>
-              <button type='submit'>Register</button>
+              <button type='submit'>Login</button>
             </div>
           </form>
-          <p>
-            Already registered? <Link to='/login'>Login</Link>.
-          </p>
-        </div>{' '}
+          <div>
+            <p>
+              New here? <Link to='/register'>Register</Link>.
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );

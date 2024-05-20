@@ -4,8 +4,7 @@ import {
   getUserCredentials,
   removeUserCredentials
 } from '../helpers/tokenManager';
-
-import { SearchContextProvider } from '../searchContext';
+import { SearchContextProvider } from '../context/searchContext';
 
 import styles from '../styles/Layout.module.css';
 
@@ -17,7 +16,7 @@ export default function Layout() {
 
   useEffect(() => {
     const credentials = getUserCredentials();
-    if (credentials) {
+    if (credentials.email.length > 0) {
       setEmail(() => credentials.email);
     }
   }, []);
@@ -55,6 +54,7 @@ export default function Layout() {
           </button>
         </div>
       </div>
+
       <SearchContextProvider>
         <Outlet />
       </SearchContextProvider>
