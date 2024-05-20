@@ -1,7 +1,5 @@
-/**
- * @constant {string} key used to add user credentials to local stoarge.
- */
-const STORAGE_KEY: string = 'pixabayUser';
+// Key used to add user credentials to local stoarge.
+const STORAGE_KEY = 'pixabayUser';
 
 type UserCredentials = {
   email: string;
@@ -22,16 +20,13 @@ export const getUserCredentials = (): UserCredentials => {
 
 /**
  * Save user credentials to local storage.
- *
- * @param {string} email
- * @param {string} token
  */
 export const storeUserCredentials = (email: string, token: string): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, token }));
 };
 
 /**
- * Reomve user credentials from local storage.
+ * Remove user credentials from local storage.
  */
 export const removeUserCredentials = (): void =>
   localStorage.removeItem(STORAGE_KEY);

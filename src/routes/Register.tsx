@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
@@ -36,7 +35,7 @@ export default function Register() {
     }
   };
 
-  const submitRegisterForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  const submitRegisterForm = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     register();
   };

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
@@ -37,7 +36,7 @@ export default function Login() {
     }
   };
 
-  const submitLoginForm = (e: React.FormEvent<HTMLFormElement>): void => {
+  const submitLoginForm = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     login();
   };

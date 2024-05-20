@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
