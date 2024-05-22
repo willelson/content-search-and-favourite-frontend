@@ -145,10 +145,14 @@ export default function Search() {
               content={content}
               toggleContentStatus={toggleContentStatus}
             />
+            <Flex justify='center' mt='md'>
+              <Pagination
+                value={page}
+                total={totalPages}
+                onChange={changePage}
+              />
+            </Flex>
           </Container>
-          <Flex justify='center'>
-            <Pagination value={page} total={totalPages} onChange={changePage} />
-          </Flex>
         </>
       )}
       {noSearchResults}

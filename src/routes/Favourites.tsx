@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
 
-import { Text, Flex, Pagination } from '@mantine/core';
+import { Container, Text, Flex, Pagination } from '@mantine/core';
 import ImageList from '../utils/ImageList';
 
 import { PixabayItem } from '../types/pixabayTypes';
@@ -65,7 +65,7 @@ export default function Favourites() {
       : 'You do not have any favourite images or videos';
 
   return (
-    <>
+    <Container fluid>
       <Text mb='md'>{message}</Text>
 
       {content.length > 0 && (
@@ -79,6 +79,6 @@ export default function Favourites() {
           </Flex>
         </>
       )}
-    </>
+    </Container>
   );
 }

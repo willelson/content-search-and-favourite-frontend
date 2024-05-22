@@ -2,10 +2,12 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
   AppShell,
+  Avatar,
   Button,
   Flex,
   Group,
   Text,
+  Tooltip,
   useMantineColorScheme,
   useComputedColorScheme
 } from '@mantine/core';
@@ -33,6 +35,9 @@ export default function Layout() {
 
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light');
+  const colorSchemeToggleText = `${
+    computedColorScheme === 'dark' ? 'Light' : 'Dark'
+  } mode`;
 
   const toggleColorScheme = () =>
     setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
@@ -78,17 +83,26 @@ export default function Layout() {
             </Button>
           </Flex>
           <Group>
-            <Text>{email}</Text>
-            <Button variant='default' size='sm' onClick={() => logout()}>
-              <MdLogout />
-            </Button>
-            <Button
-              variant='default'
-              size='sm'
-              onClick={() => toggleColorScheme()}
-            >
-              {computedColorScheme === 'dark' ? <FaSun /> : <FaMoon />}
-            </Button>
+            <Tooltip label={email} withArrow>
+              <Avatar
+                src={null}
+                alt={email}
+                color='red'
+                style={{ textTransform: 'capitalize' }}
+              >
+                {email[0]}
+              </Avatar>
+            </Tooltip>
+            <Tooltip label='Logout' withArrow>
+              <Button variant='default' size='sm' onClick={logout}>
+                <MdLogout />
+              </Button>
+            </Tooltip>
+            <Tooltip label={colorSchemeToggleText} withArrow>
+              <Button variant='default' size='sm' onClick={toggleColorScheme}>
+                {computedColorScheme === 'dark' ? <FaSun /> : <FaMoon />}
+              </Button>
+            </Tooltip>
           </Group>
         </Flex>
       </AppShell.Header>
