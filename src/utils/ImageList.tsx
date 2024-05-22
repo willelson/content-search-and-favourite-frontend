@@ -1,7 +1,5 @@
-import imageIcon from '../icons/imageIcon.png';
-import videoIcon from '../icons/videoIcon.png';
-
-import styles from '../styles/ImageList.module.css';
+import { Grid } from '@mantine/core';
+import ImageCard from './ImageCard';
 import { API_BASE } from '../helpers/constants';
 import { getUserCredentials } from '../helpers/tokenManager';
 
@@ -71,6 +69,7 @@ export default function ImageList({
     }
   };
 
+  // TODO pass to ImageCard
   const toggleFavourite = (item: PixabayItem) => {
     if (item.userFavouriteId !== null) {
       removeFavourite(item);
@@ -79,39 +78,45 @@ export default function ImageList({
     }
   };
 
-  const thumnails = content.map((item: PixabayItem) => {
-    // Check if this item already favourited by the user
-    const isFavourite = item.userFavouriteId !== null;
-    const buttonText = isFavourite ? 'Remove favourite' : 'Add favourite';
-
-    const imageSrc = item?.contentType === 'image' ? imageIcon : videoIcon;
-    const tooltipText =
-      item?.contentType === 'image' ? 'image content' : 'video content';
-
+  const cards = content.map((item) => {
     // Create unique identifier for each image
     const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
-
-    return (
-      <li key={uniqueIdentifier}>
-        <div>
-          <img
-            src={item.thumbnail}
-            style={{ width: '100%', height: '150px', objectFit: 'cover' }}
-            alt='image content'
-          />
-        </div>
-        <div className={styles.controls}>
-          <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
-          <img
-            className={styles.contentIcon}
-            src={imageSrc}
-            alt={tooltipText}
-            title={tooltipText}
-          />
-        </div>
-      </li>
-    );
+    return <ImageCard item={item} loading={false} key={uniqueIdentifier} />;
   });
 
-  return <ul className={styles.gridContainer}>{thumnails}</ul>;
+  // const thumnails = content.map((item: PixabayItem) => {
+  //   // Check if this item already favourited by the user
+  //   const isFavourite = item.userFavouriteId !== null;
+  //   const buttonText = isFavourite ? 'Remove favourite' : 'Add favourite';
+
+  //   const imageSrc = item?.contentType === 'image' ? imageIcon : videoIcon;
+  //   const tooltipText =
+  //     item?.contentType === 'image' ? 'image content' : 'video content';
+
+  //   // Create unique identifier for each image
+  //   const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
+
+  //   return (
+  //     <li key={uniqueIdentifier}>
+  //       <div>
+  //         <img
+  //           src={item.thumbnail}
+  //           style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+  //           alt='image content'
+  //         />
+  //       </div>
+  //       <div className={styles.controls}>
+  //         <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
+  //         <img
+  //           className={styles.contentIcon}
+  //           src={imageSrc}
+  //           alt={tooltipText}
+  //           title={tooltipText}
+  //         />
+  //       </div>
+  //     </li>
+  //   );
+  // });
+
+  return <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>{cards}</Grid>;
 }

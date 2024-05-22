@@ -1,0 +1,76 @@
+import { useState } from 'react';
+import {
+  ActionIcon,
+  Card,
+  Grid,
+  Image,
+  Group,
+  Skeleton,
+  Text,
+  useComputedColorScheme
+} from '@mantine/core';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { PixabayItem } from '../types/pixabayTypes';
+
+type ImageCard = {
+  loading: boolean;
+  item: PixabayItem;
+};
+
+function ImageCard({ loading, item }: ImageCard) {
+  const [favourite, setFavourite] = useState<boolean>(false);
+
+  const computedColorScheme = useComputedColorScheme('light');
+  const iconColor =
+    computedColorScheme === 'dark'
+      ? 'var(--mantine-primary-color-contrast)'
+      : '';
+
+  const gridSpan = { base: 12, md: 4, lg: 2 };
+
+  const skeleton = (
+    <Grid.Col span={gridSpan}>
+      <Card withBorder>
+        <Card.Section>
+          <Skeleton height={160} />
+        </Card.Section>
+
+        <Group justify='space-between' mt='md' mb='xs'>
+          <Skeleton height={12} mt={6} width='30%' radius='xl' />
+          <Skeleton height={12} mt={6} width={20} radius='xl' mr={4} />
+        </Group>
+      </Card>
+    </Grid.Col>
+  );
+
+  const card = (
+    <Grid.Col span={gridSpan}>
+      <Card withBorder>
+        <Card.Section>
+          <Image src={item.contentURL} height={160} alt='Pixabay image' />
+        </Card.Section>
+
+        <Group justify='space-between' mt='md'>
+          <Text>Image</Text>
+          <Group style={{ gap: '4px' }}>
+            <ActionIcon
+              variant='transparent'
+              aria-label='Favourite'
+              onClick={() => setFavourite((f) => !f)}
+            >
+              {favourite ? (
+                <FaHeart size={20} color={iconColor} />
+              ) : (
+                <FaRegHeart size={20} color={iconColor} />
+              )}
+            </ActionIcon>
+          </Group>
+        </Group>
+      </Card>
+    </Grid.Col>
+  );
+
+  return loading ? skeleton : card;
+}
+
+export default ImageCard;
