@@ -1,8 +1,9 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Anchor, Button, Input, Flex, Stack } from '@mantine/core';
+
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
-import styles from '../styles/AuthForms.module.css';
 
 export default function Register() {
   const [email, setEmail] = useState<string>('');
@@ -40,36 +41,33 @@ export default function Register() {
   };
 
   return (
-    <>
-      <div className={styles.authForm}>
-        <div>
-          <h2 style={{ marginBottom: '8px' }}>Register</h2>
-          <form onSubmit={submitRegisterForm}>
-            <div>
-              <input
-                type='text'
-                placeholder='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type='password'
-                placeholder='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className={styles.submitContainer}>
-              <button type='submit'>Register</button>
-            </div>
-          </form>
+    <Flex align='center' justify='center' style={{ height: '100vh' }}>
+      <form onSubmit={submitRegisterForm}>
+        <Stack>
+          <Input
+            type='text'
+            placeholder='Email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type='password'
+            placeholder='Password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type='submit' mt='md'>
+            Register
+          </Button>
           <p>
-            Already registered? <Link to='/login'>Login</Link>.
+            Already registered?{' '}
+            <Anchor component={Link} to='/login'>
+              Login
+            </Anchor>
+            .
           </p>
-        </div>
-      </div>
-    </>
+        </Stack>
+      </form>
+    </Flex>
   );
 }

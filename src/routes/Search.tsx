@@ -1,11 +1,19 @@
 import { useState, useContext, FormEvent } from 'react';
 
-import styles from '../styles/Search.module.css';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
 
+import {
+  Button,
+  Container,
+  Flex,
+  Group,
+  Text,
+  Pagination,
+  Input,
+  Radio
+} from '@mantine/core';
 import ImageList from '../utils/ImageList';
-import Pagination from '../utils/Pagination';
 
 import { SearchContext } from '../context/searchContext';
 
@@ -75,6 +83,9 @@ export default function Search() {
     }
   };
 
+  const resultsPerPage = 20;
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
+
   /**
    * Pagination page change handler. Passes query state from previous requests to getResults
    */
@@ -82,71 +93,66 @@ export default function Search() {
     getResults(query, contentTypeQuery, newPage);
 
   const queryMessage = (
-    <p>
-      {`Showing ${contentTypeQuery} results for "${query}"`}
-      <button onClick={clearSearch} style={{ marginLeft: '12px' }}>
+    <Flex gap='md' align='center' mt='sm' mb='sm'>
+      <Text>
+        Showing {contentTypeQuery} results for "{query}"
+      </Text>
+      <Button size='xs' variant='default' onClick={clearSearch}>
         Clear
-      </button>
-    </p>
+      </Button>
+    </Flex>
   );
 
   // Show no results message if query set but content is empty
   const noSearchResults = query.length > 0 && content.length === 0 && (
-    <p>No results</p>
+    <Text>No results</Text>
   );
 
   return (
     <>
-      <form onSubmit={submitSearch}>
-        <input
-          type='text'
-          placeholder='Search for content'
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-
-        <label className={styles.label}>
-          <input
-            type='radio'
-            value='image'
-            checked={contentTypeInput === 'image'}
-            onChange={(e) => setContentTypeInput(e.target.value)}
-            className={styles.radioButton}
-          />
-          Images
-        </label>
-        <label className={styles.label}>
-          <input
-            type='radio'
-            value='video'
-            checked={contentTypeInput === 'video'}
-            onChange={(e) => setContentTypeInput(e.target.value)}
-            className={styles.radioButton}
-          />
-          Videos
-        </label>
-
-        <button
-          type='submit'
-          className={styles.searchButton}
-          disabled={searchInput.length === 0}
-          title={searchInput.length === 0 ? 'Enter search term' : ''}
-        >
-          Search
-        </button>
-      </form>
+      <Container fluid mb='lg'>
+        <form onSubmit={submitSearch}>
+          <Group>
+            <Input
+              placeholder='Search Content'
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <Radio
+              label='Image'
+              value='image'
+              checked={contentTypeInput === 'image'}
+              onChange={(e) => setContentTypeInput(e.target.value)}
+            />
+            <Radio
+              label='Video'
+              value='video'
+              checked={contentTypeInput === 'video'}
+              onChange={(e) => setContentTypeInput(e.target.value)}
+            />
+            <Button size='xs' type='submit' disabled={searchInput.length === 0}>
+              Search
+            </Button>
+          </Group>
+        </form>
+      </Container>
       {content.length > 0 && (
         <>
-          <span>{queryMessage}</span>
-          <ImageList
-            content={content}
-            toggleContentStatus={toggleContentStatus}
-          />
-          <Pagination
-            page={page}
-            totalResults={totalResults}
-            changePage={changePage}
-          />
+          <Container fluid>
+            {queryMessage}
+
+            <ImageList
+              content={content}
+              toggleContentStatus={toggleContentStatus}
+            />
+            <Flex justify='center' mt='md'>
+              <Pagination
+                value={page}
+                total={totalPages}
+                onChange={changePage}
+              />
+            </Flex>
+          </Container>
         </>
       )}
       {noSearchResults}

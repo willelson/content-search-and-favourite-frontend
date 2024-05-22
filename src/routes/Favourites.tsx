@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
 
+import { Container, Text, Flex, Pagination } from '@mantine/core';
 import ImageList from '../utils/ImageList';
-import Pagination from '../utils/Pagination';
 
 import { PixabayItem } from '../types/pixabayTypes';
 
@@ -56,14 +56,17 @@ export default function Favourites() {
   // Get new page results when pagination changes
   const changePage = (newPage: number) => getFavourites(newPage);
 
+  const resultsPerPage = 20;
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
+
   const message =
     content.length > 0
       ? 'Your favourite images and videos'
       : 'You do not have any favourite images or videos';
 
   return (
-    <>
-      <div>{message}</div>
+    <Container fluid>
+      <Text mb='md'>{message}</Text>
 
       {content.length > 0 && (
         <>
@@ -71,13 +74,11 @@ export default function Favourites() {
             content={content}
             toggleContentStatus={toggleContentStatus}
           />
-          <Pagination
-            page={page}
-            totalResults={totalResults}
-            changePage={changePage}
-          />
+          <Flex justify='center' mt='lg'>
+            <Pagination value={page} total={totalPages} onChange={changePage} />
+          </Flex>
         </>
       )}
-    </>
+    </Container>
   );
 }
