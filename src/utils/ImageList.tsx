@@ -81,42 +81,15 @@ export default function ImageList({
   const cards = content.map((item) => {
     // Create unique identifier for each image
     const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
-    return <ImageCard item={item} loading={false} key={uniqueIdentifier} />;
+    return (
+      <ImageCard
+        item={item}
+        loading={false}
+        key={uniqueIdentifier}
+        toggleFavourite={toggleFavourite}
+      />
+    );
   });
-
-  // const thumnails = content.map((item: PixabayItem) => {
-  //   // Check if this item already favourited by the user
-  //   const isFavourite = item.userFavouriteId !== null;
-  //   const buttonText = isFavourite ? 'Remove favourite' : 'Add favourite';
-
-  //   const imageSrc = item?.contentType === 'image' ? imageIcon : videoIcon;
-  //   const tooltipText =
-  //     item?.contentType === 'image' ? 'image content' : 'video content';
-
-  //   // Create unique identifier for each image
-  //   const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
-
-  //   return (
-  //     <li key={uniqueIdentifier}>
-  //       <div>
-  //         <img
-  //           src={item.thumbnail}
-  //           style={{ width: '100%', height: '150px', objectFit: 'cover' }}
-  //           alt='image content'
-  //         />
-  //       </div>
-  //       <div className={styles.controls}>
-  //         <button onClick={() => toggleFavourite(item)}>{buttonText}</button>
-  //         <img
-  //           className={styles.contentIcon}
-  //           src={imageSrc}
-  //           alt={tooltipText}
-  //           title={tooltipText}
-  //         />
-  //       </div>
-  //     </li>
-  //   );
-  // });
 
   return <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>{cards}</Grid>;
 }

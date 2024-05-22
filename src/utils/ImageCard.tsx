@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   ActionIcon,
   Card,
@@ -15,11 +14,10 @@ import { PixabayItem } from '../types/pixabayTypes';
 type ImageCard = {
   loading: boolean;
   item: PixabayItem;
+  toggleFavourite: (item: PixabayItem) => void;
 };
 
-function ImageCard({ loading, item }: ImageCard) {
-  const [favourite, setFavourite] = useState<boolean>(false);
-
+function ImageCard({ loading, item, toggleFavourite }: ImageCard) {
   const computedColorScheme = useComputedColorScheme('light');
   const iconColor =
     computedColorScheme === 'dark'
@@ -47,7 +45,7 @@ function ImageCard({ loading, item }: ImageCard) {
     <Grid.Col span={gridSpan}>
       <Card withBorder>
         <Card.Section>
-          <Image src={item.contentURL} height={160} alt='Pixabay image' />
+          <Image src={item.thumbnail} height={160} alt='Pixabay image' />
         </Card.Section>
 
         <Group justify='space-between' mt='md'>
@@ -56,9 +54,9 @@ function ImageCard({ loading, item }: ImageCard) {
             <ActionIcon
               variant='transparent'
               aria-label='Favourite'
-              onClick={() => setFavourite((f) => !f)}
+              onClick={() => toggleFavourite(item)}
             >
-              {favourite ? (
+              {item.userFavouriteId !== null ? (
                 <FaHeart size={20} color={iconColor} />
               ) : (
                 <FaRegHeart size={20} color={iconColor} />

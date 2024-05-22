@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
 
+import { Text } from '@mantine/core';
+
 import ImageList from '../utils/ImageList';
 import Pagination from '../utils/Pagination';
 
@@ -63,7 +65,7 @@ export default function Favourites() {
 
   return (
     <>
-      <div>{message}</div>
+      <Text mb='md'>{message}</Text>
 
       {content.length > 0 && (
         <>
