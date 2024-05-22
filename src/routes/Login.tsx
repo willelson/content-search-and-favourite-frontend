@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Flex, Stack } from '@mantine/core';
+import { Anchor, Button, Input, Flex, Stack } from '@mantine/core';
 
 import { storeUserCredentials } from '../helpers/tokenManager';
 import { API_BASE } from '../helpers/constants';
@@ -60,7 +60,11 @@ export default function Login() {
             Login
           </Button>
           <p>
-            New here? <Link to='/register'>Register</Link>.
+            New here?{' '}
+            <Anchor component={Link} to='/register'>
+              Register
+            </Anchor>
+            .
           </p>
         </Stack>
       </form>
