@@ -69,7 +69,6 @@ export default function ImageList({
     }
   };
 
-  // TODO pass to ImageCard
   const toggleFavourite = (item: PixabayItem) => {
     if (item.userFavouriteId !== null) {
       removeFavourite(item);
@@ -79,7 +78,7 @@ export default function ImageList({
   };
 
   const cards = content.map((item) => {
-    // Create unique identifier for each image
+    // Create unique identifier for each card
     const uniqueIdentifier = `${item.contentType}-${item.pixabayId}`;
     return (
       <ImageCard

@@ -49,7 +49,9 @@ function ImageCard({ loading, item, toggleFavourite }: ImageCard) {
         </Card.Section>
 
         <Group justify='space-between' mt='md'>
-          <Text>Image</Text>
+          <Text style={{ textTransform: 'capitalize' }}>
+            {item.contentType}
+          </Text>
           <Group style={{ gap: '4px' }}>
             <ActionIcon
               variant='transparent'

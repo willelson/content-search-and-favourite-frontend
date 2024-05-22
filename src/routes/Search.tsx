@@ -9,13 +9,11 @@ import {
   Flex,
   Group,
   Text,
-  // Pagination,
+  Pagination,
   Input,
   Radio
 } from '@mantine/core';
-
 import ImageList from '../utils/ImageList';
-import Pagination from '../utils/Pagination';
 
 import { SearchContext } from '../context/searchContext';
 
@@ -85,6 +83,9 @@ export default function Search() {
     }
   };
 
+  const resultsPerPage = 20;
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
+
   /**
    * Pagination page change handler. Passes query state from previous requests to getResults
    */
@@ -104,9 +105,7 @@ export default function Search() {
 
   // Show no results message if query set but content is empty
   const noSearchResults = query.length > 0 && content.length === 0 && (
-    <Container fluid>
-      <Text>No results</Text>
-    </Container>
+    <Text>No results</Text>
   );
 
   return (
@@ -131,7 +130,7 @@ export default function Search() {
               checked={contentTypeInput === 'video'}
               onChange={(e) => setContentTypeInput(e.target.value)}
             />
-            <Button size='xs' type='submit'>
+            <Button size='xs' type='submit' disabled={searchInput.length === 0}>
               Search
             </Button>
           </Group>
@@ -140,7 +139,7 @@ export default function Search() {
       {content.length > 0 && (
         <>
           <Container fluid>
-            <span>{queryMessage}</span>
+            {queryMessage}
 
             <ImageList
               content={content}
@@ -148,11 +147,7 @@ export default function Search() {
             />
           </Container>
           <Flex justify='center'>
-            <Pagination
-              page={page}
-              totalResults={totalResults}
-              changePage={changePage}
-            />
+            <Pagination value={page} total={totalPages} onChange={changePage} />
           </Flex>
         </>
       )}
