@@ -45,7 +45,7 @@ function ImageCard({ loading, item, toggleFavourite }: ImageCard) {
     <Grid.Col span={gridSpan}>
       <Card withBorder>
         <Card.Section>
-          <Image src={item.thumbnail} height={160} alt='Pixabay image' />
+          <Image src={item.contentURL} height={160} alt='Pixabay image' />
         </Card.Section>
 
         <Group justify='space-between' mt='md'>
