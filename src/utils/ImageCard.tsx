@@ -24,7 +24,7 @@ function ImageCard({ loading, item, toggleFavourite }: ImageCard) {
       ? 'var(--mantine-primary-color-contrast)'
       : '';
 
-  const gridSpan = { base: 12, md: 4, lg: 2 };
+  const gridSpan = { base: 20, xs: 20, sm: 10, md: 5, lg: 4 };
 
   const skeleton = (
     <Grid.Col span={gridSpan}>

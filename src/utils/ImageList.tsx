@@ -95,5 +95,9 @@ export default function ImageList({
     );
   });
 
-  return <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>{cards}</Grid>;
+  return (
+    <Grid columns={20} gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
+      {cards}
+    </Grid>
+  );
 }
