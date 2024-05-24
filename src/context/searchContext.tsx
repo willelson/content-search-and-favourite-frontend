@@ -8,6 +8,7 @@ type SearchContext = {
     contentType: string
   ) => void;
   clearSearch: () => void;
+  removeContentFavourite: (pixabayId: number) => void;
   page: number;
   totalResults: number;
   content: PixabayItem[];
@@ -74,9 +75,22 @@ export const SearchContextProvider = ({ children }: SearchContextProvider) => {
     setContentTypeQuery(() => contentType);
   };
 
+  /**
+   * Remove favourite, if it exists, from search results stored in context
+   */
+  const removeContentFavourite = (id: number) => {
+    const updatedContent = content.map((item) => {
+      const userFavouriteId =
+        item.pixabayId === id ? null : item.userFavouriteId;
+      return { ...item, userFavouriteId };
+    });
+    setContent(() => updatedContent);
+  };
+
   const contextValue = {
     updateSearchContext,
     clearSearch,
+    removeContentFavourite,
     page,
     totalResults,
     content,

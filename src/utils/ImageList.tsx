@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import { Grid } from '@mantine/core';
 import ImageCard from './ImageCard';
 import { API_BASE } from '../helpers/constants';
 import { getUserCredentials } from '../helpers/tokenManager';
 
 import { PixabayItem } from '../types/pixabayTypes';
+import { SearchContext } from '../context/searchContext';
 
 type ImageListProps = {
   content: PixabayItem[];
@@ -14,6 +16,8 @@ export default function ImageList({
   content,
   toggleContentStatus
 }: ImageListProps) {
+  const { removeContentFavourite } = useContext(SearchContext);
+
   const addFavourite = async (item: PixabayItem) => {
     const { pixabayId, contentType } = item;
 
@@ -59,6 +63,7 @@ export default function ImageList({
     // Handle response
     if (response.status === 202) {
       toggleContentStatus();
+      removeContentFavourite(pixabayId);
     } else if ([400, 401].includes(response.status)) {
       const errors = await response.json();
       alert(errors.errors.join('\n'));
