@@ -11,7 +11,8 @@ import {
   Text,
   Pagination,
   Input,
-  Radio
+  Radio,
+  Stack
 } from '@mantine/core';
 import ImageList from '../utils/ImageList';
 
@@ -103,6 +104,39 @@ export default function Search() {
     </Flex>
   );
 
+  const mobileForm = (
+    <Stack hiddenFrom='sm'>
+      <Input
+        placeholder='Search Content'
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
+      <Group>
+        <Radio
+          label='Image'
+          value='image'
+          checked={contentTypeInput === 'image'}
+          onChange={(e) => setContentTypeInput(e.target.value)}
+        />
+        <Radio
+          label='Video'
+          value='video'
+          checked={contentTypeInput === 'video'}
+          onChange={(e) => setContentTypeInput(e.target.value)}
+        />
+
+        <Button
+          size='xs'
+          type='submit'
+          disabled={searchInput.length === 0}
+          flex={1}
+        >
+          Search
+        </Button>
+      </Group>
+    </Stack>
+  );
+
   // Show no results message if query set but content is empty
   const noSearchResults = query.length > 0 && content.length === 0 && (
     <Text>No results</Text>
@@ -112,7 +146,8 @@ export default function Search() {
     <>
       <Container fluid mb='lg'>
         <form onSubmit={submitSearch}>
-          <Group>
+          {mobileForm}
+          <Group visibleFrom='sm'>
             <Input
               placeholder='Search Content'
               value={searchInput}

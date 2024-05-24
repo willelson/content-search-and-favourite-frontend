@@ -3,14 +3,18 @@ import { useState, useEffect } from 'react';
 import {
   AppShell,
   Avatar,
+  Burger,
   Button,
+  Drawer,
   Flex,
   Group,
+  Stack,
   Text,
   Tooltip,
   useMantineColorScheme,
   useComputedColorScheme
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { MdLogout, MdOutlineExplore } from 'react-icons/md';
 
@@ -20,9 +24,35 @@ import {
 } from '../helpers/tokenManager';
 import { SearchContextProvider } from '../context/searchContext';
 
+type MobileHeader = {
+  hiddenFrom?: string;
+  opened: boolean;
+  toggle: () => void;
+};
+
+function MobileHeader({ hiddenFrom = 'sm', opened, toggle }: MobileHeader) {
+  return (
+    <Flex
+      hiddenFrom={hiddenFrom}
+      justify='space-between'
+      align='center'
+      style={{ padding: '0px 30px', height: '100%' }}
+    >
+      <Flex>
+        <Text size='lg' mr={8}>
+          Pixabay
+        </Text>
+        <MdOutlineExplore size={26} />
+      </Flex>
+      <Burger opened={opened} onClick={toggle} size='sm' />
+    </Flex>
+  );
+}
+
 export default function Layout() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const [opened, { toggle, close }] = useDisclosure();
 
   const location = useLocation();
 
@@ -51,24 +81,81 @@ export default function Layout() {
   };
 
   return (
-    <AppShell header={{ height: 60 }} padding='md'>
-      <AppShell.Header>
-        <Flex
-          justify='space-between'
-          align='center'
-          style={{ padding: '10px 30px' }}
-        >
-          <Flex justify='space-between' align='center'>
-            <Text size='lg' mr={48}>
-              <Flex justify='space-between' align='center'>
-                Pixabay{' '}
-                <MdOutlineExplore size={26} style={{ marginLeft: '8px' }} />
-              </Flex>
-            </Text>
+    <>
+      <AppShell header={{ height: 60 }} padding='md'>
+        <AppShell.Header>
+          <MobileHeader opened={opened} toggle={toggle} />
+          <Flex
+            justify='space-between'
+            align='center'
+            style={{ padding: '0px 30px', height: '100%' }}
+            visibleFrom='sm'
+          >
+            <Flex align='center'>
+              <Text size='lg' mr={8}>
+                Pixabay
+              </Text>
+              <MdOutlineExplore size={26} />
+            </Flex>
+
+            <Group>
+              <Button
+                variant='subtle'
+                size='sm'
+                onClick={() => navigate('/search')}
+                color={getLinkColour('search')}
+              >
+                Search
+              </Button>
+              <Button
+                variant='subtle'
+                size='sm'
+                onClick={() => navigate('/favourites')}
+                color={getLinkColour('favourites')}
+              >
+                Favourites
+              </Button>
+            </Group>
+
+            <Group>
+              <Tooltip label={email} withArrow>
+                <Avatar
+                  src={null}
+                  alt={email}
+                  color='red'
+                  style={{ textTransform: 'capitalize' }}
+                  title={undefined}
+                >
+                  {email[0]}
+                </Avatar>
+              </Tooltip>
+              <Tooltip label='Logout' withArrow>
+                <Button variant='default' size='sm' onClick={logout}>
+                  <MdLogout />
+                </Button>
+              </Tooltip>
+              <Tooltip label={colorSchemeToggleText} withArrow>
+                <Button variant='default' size='sm' onClick={toggleColorScheme}>
+                  {computedColorScheme === 'dark' ? <FaSun /> : <FaMoon />}
+                </Button>
+              </Tooltip>
+            </Group>
+          </Flex>
+        </AppShell.Header>
+        <AppShell.Main>
+          <SearchContextProvider>
+            <Outlet />
+          </SearchContextProvider>
+        </AppShell.Main>
+        <Drawer opened={opened} onClose={close} title='Menu' position='top'>
+          <Stack>
             <Button
               variant='subtle'
               size='sm'
-              onClick={() => navigate('/search')}
+              onClick={() => {
+                navigate('/search');
+                close();
+              }}
               color={getLinkColour('search')}
             >
               Search
@@ -76,14 +163,15 @@ export default function Layout() {
             <Button
               variant='subtle'
               size='sm'
-              onClick={() => navigate('/favourites')}
+              onClick={() => {
+                navigate('/favourites');
+                close();
+              }}
               color={getLinkColour('favourites')}
             >
               Favourites
             </Button>
-          </Flex>
-          <Group>
-            <Tooltip label={email} withArrow>
+            <Group align='center' justify='center'>
               <Avatar
                 src={null}
                 alt={email}
@@ -92,25 +180,17 @@ export default function Layout() {
               >
                 {email[0]}
               </Avatar>
-            </Tooltip>
-            <Tooltip label='Logout' withArrow>
+
               <Button variant='default' size='sm' onClick={logout}>
                 <MdLogout />
               </Button>
-            </Tooltip>
-            <Tooltip label={colorSchemeToggleText} withArrow>
               <Button variant='default' size='sm' onClick={toggleColorScheme}>
                 {computedColorScheme === 'dark' ? <FaSun /> : <FaMoon />}
               </Button>
-            </Tooltip>
-          </Group>
-        </Flex>
-      </AppShell.Header>
-      <AppShell.Main>
-        <SearchContextProvider>
-          <Outlet />
-        </SearchContextProvider>
-      </AppShell.Main>
-    </AppShell>
+            </Group>
+          </Stack>
+        </Drawer>
+      </AppShell>
+    </>
   );
 }

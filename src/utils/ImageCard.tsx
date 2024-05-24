@@ -59,7 +59,7 @@ function ImageCard({ loading, item, toggleFavourite }: ImageCard) {
               onClick={() => toggleFavourite(item)}
             >
               {item.userFavouriteId !== null ? (
-                <FaHeart size={20} color={iconColor} />
+                <FaHeart size={20} color='mediumvioletred' />
               ) : (
                 <FaRegHeart size={20} color={iconColor} />
               )}
